@@ -41,6 +41,7 @@
 				<th>Apellidos</th>
 				<th>Fecha</th>
 				<th>Nacionalidad</th>
+				<th>Vigencia</th>
 				<th>Acciones</th>
 			</thead>
 			<tbody>
@@ -48,17 +49,18 @@
 				foreach ($actorList as $actor) {
 				?>
 					<tr>
-						<td><?php echo $actor->getid() ?></td>
-						<td><?php echo $actor->getnombre() ?></td>
-						<td><?php echo $actor->getapellidos() ?></td>
-						<td><?php echo $actor->getfecha() ?></td>
-						<td><?php echo $actor->getnacionalidad() ?></td>
+						<td><?php echo $actor['id'] ?></td>
+						<td><?php echo $actor['nombre'] ?></td>
+						<td><?php echo $actor['apellidos'] ?></td>
+						<td><?php echo $actor['fecha'] ?></td>
+						<td><?php echo $actor['nacionalidad'] ?></td>
+						<td><?php echo $actor['vigencia'] ?></td>
 						<td>
 							<div class="btn-group" role="group" aria-label="Basic example">
-								<a class="btn btn-success" href="editar.php?ID=<?php echo $actor->getid();?>">Editar</a>
+								<a class="btn btn-success" href="editar.php?ID=<?php echo $actor['id'];?>">Editar</a>
 								
 								<form name="delete_actor" action="delete.php" method="POST" style="...">
-									<input type="hidden" name="actorid" value="<?php echo $actor->getid();?>"/>
+									<input type="hidden" name="actorid" value="<?php echo $actor['id'];?>"/>
 									<button type="submit" class="btn btn-danger">Borrar</button>
 								</form>								
 							</div>

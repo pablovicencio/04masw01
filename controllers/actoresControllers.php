@@ -1,86 +1,87 @@
 <?php
 	require_once("../../models/actorModels.php");
 
-	function cn(){
-		$localhost="localhost";
-		$usersdb="root";
-		$passworddb="123456789";
-		$namebd="04masw01";
-		
-		$conexion = @new mysqli($localhost, $usersdb, $passworddb, $namebd);//mysqli_connect
-		
-		if($conexion->connect_error){
-			die("Error: ".$conexion->connect_error);
-		}
-				
-		return $conexion;	
-	}
+	require_once '../../config/db.php';
 	
 	function listActor(){
-		$conexion = cn();
-		$actorList = $conexion->query(query:"SELECT * FROM actores");
-		
-		$actorArray = [];
-		foreach($actorList as $actorItem){
-			$actorObj = new actor($actorItem["ID"],$actorItem["Nombre"],$actorItem["Apellidos"],$actorItem["Fecha"],$actorItem["Nacionalidad"]);
-			array_push($actorArray,$actorObj);
-		}
-		$conexion->close();
-		
-		return $actorArray;
+
+		$pdo = AccesoDB::getCon();
+
+            $sql_list_act = "SELECT * FROM actores";
+
+            $stmt = $pdo->prepare($sql_list_act);
+            $stmt->execute();
+
+			$response = $stmt->fetchAll();
+            return $response;
 	}
 	
 	function newActor($actorNombre, $actorApellidos, $actorFecha, $actorNacionalidad){
-		$conexion=cn();
-		
-		$actorNuevo = false;
-		
-		if($resultadoInsert = $conexion->query(query:"INSERT INTO actores (Nombre, Apellidos, Fecha, Nacionalidad) VALUES('$actorNombre', '$actorApellidos', '$actorFecha', '$actorNacionalidad')")){
-			$actorNuevo = true;
-		}
-		$conexion->close();
-		
-		return $actorNuevo;
+
+		$pdo = AccesoDB::getCon();
+
+                $sql_new_act = "INSERT INTO actores 
+									(Nombre, Apellidos, Fecha, Nacionalidad, Vigencia) 
+									VALUES(:nombre, :ape, :fecha, :nac, 1)";
+
+                $stmt = $pdo->prepare($sql_new_act);
+                $stmt->bindParam(":nombre", $actorNombre, PDO::PARAM_STR);
+                $stmt->bindParam(":ape", $actorApellidos, PDO::PARAM_STR);
+                $stmt->bindParam(":fecha", $actorFecha, PDO::PARAM_STR);
+				$stmt->bindParam(":nac", $actorNacionalidad, PDO::PARAM_STR);
+                $stmt->execute();
+
+                return $stmt->rowCount();
 	}
 	
 	function listUno($actorID){
-		$conexion=cn();
-		
-		$actorList = $conexion->query(query:"SELECT * FROM actores WHERE ID=$actorID");
-		
-		foreach($actorList as $actorItem){
-			$actorObj = new actor($actorItem["ID"],$actorItem["Nombre"],$actorItem["Apellidos"],$actorItem["Fecha"],$actorItem["Nacionalidad"]);
-		}
-		
-		$conexion->close();
-		
-		return $actorObj;
+
+		$pdo = AccesoDB::getCon();
+
+            $sql_sel_act = "SELECT * FROM actores WHERE ID=:id";
+
+            $stmt = $pdo->prepare($sql_sel_act);
+			$stmt->bindParam(":id", $actorID, PDO::PARAM_INT);
+            $stmt->execute();
+
+			$response = $stmt->fetchAll();
+            return $response;
 	}
 	
 	function editActor($actorID, $actorNombre, $actorApellidos, $actorFecha, $actorNacionalidad){
-		$conexion=cn();
 		
-		$actorEditar = false;
-		
-		if($resultadoUpdate = $conexion->query(query:"UPDATE actores SET Nombre='$actorNombre', Apellidos='$actorApellidos', Fecha='$actorFecha', Nacionalidad='$actorNacionalidad' WHERE ID='$actorID'")){
-			$actorEditar = true;
-		}
-		$conexion->close();
-		
-		return $actorEditar;
+		$pdo = AccesoDB::getCon();
+
+                $sql_upd_act = "UPDATE actores SET
+								Nombre = :nombre,
+								Apellidos = :ape,
+								Fecha = :fecha,
+								Nacionalidad = :nac
+								WHERE ID = :id";
+
+                $stmt = $pdo->prepare($sql_upd_act);
+                $stmt->bindParam(":nombre", $actorNombre, PDO::PARAM_STR);
+                $stmt->bindParam(":ape", $actorApellidos, PDO::PARAM_STR);
+                $stmt->bindParam(":fecha", $actorFecha, PDO::PARAM_STR);
+				$stmt->bindParam(":nac", $actorNacionalidad, PDO::PARAM_STR);
+				$stmt->bindParam(":id", $actorID, PDO::PARAM_INT);
+                $stmt->execute();
+
+                return $stmt->rowCount();
 	}
 	
 	function borrarActor($actorID){
-		$conexion = cn();
-		
-		$actorDel = false;
-		
-		if($resultado = $conexion->query(query:"DELETE FROM actores WHERE ID=$actorID")){
-			$actorDel = true;
-		}
-		
-		$conexion->close();
-		
-		return $actorDel;
+
+		$pdo = AccesoDB::getCon();
+
+				$sql_del_act = "UPDATE actores SET
+								Vigencia = 0
+								WHERE ID = :id";
+
+						$stmt = $pdo->prepare($sql_del_act);
+						$stmt->bindParam(":id", $actorID, PDO::PARAM_INT);
+						$stmt->execute();
+
+						return $stmt->rowCount();
 	}
 ?>

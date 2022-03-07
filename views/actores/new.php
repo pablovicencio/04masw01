@@ -27,7 +27,7 @@
 		<div class="mb-3">
 			<input name="Nombre" type="text" placeholder="Especifique el nombre del actor" required/>
 			<input name="Apellidos" type="text" placeholder="Especifique los apellidos del actor" required/>
-			<input name="Fecha" type="text" placeholder="Especifique fecha de nacimiento" required/>
+			<input name="Fecha" type="date" required/>
 			<input name="Nacionalidad" type="text" placeholder="Especifique nacionalidad" required/>
 		</div>
 		<input type="submit" class="btn btn-success" value="Crear" name="BotonCrear">

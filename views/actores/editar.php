@@ -33,7 +33,7 @@
 		
 		$actor = listUno($idActor);
 		
-		//var_dump($actor);
+		
 ?>
 <div class="col-md-4 col-lg-2">
 	<div class="row">
@@ -44,13 +44,13 @@
 	<div class="col-12">
 		<form name="crear_actor" action="" method="POST">
 			<div class="row g-3">
-				<input name="Nombre" type="text" class="form-control" placeholder="Especifique el nombre del actor" value="<?php echo $actor->Nombre?>" required/>
-				<input name="Apellidos" type="text" class="form-control" placeholder="Especifique los apellidos del actor" value="<?php echo $actor->Apellidos?>" required/>
-				<input name="Fecha" type="text" class="form-control" placeholder="yyyy/mm/dd" value="<?php echo $actor->Fecha?>" required/>
-				<input name="Nacionalidad" type="text" class="form-control" placeholder="Especifique nacionalidad" value="<?php echo $actor->Nacionalidad?>" required/>
+				<input name="Nombre" type="text" class="form-control" placeholder="Especifique el nombre del actor" value="<?php echo $actor[0]['nombre'] ?>" required/>
+				<input name="Apellidos" type="text" class="form-control" placeholder="Especifique los apellidos del actor" value="<?php echo $actor[0]['apellidos'] ?>" required/>
+				<input name="Fecha" type="date" class="form-control" placeholder="yyyy/mm/dd" value="<?php echo $actor[0]['fecha'] ?>" required/>
+				<input name="Nacionalidad" type="text" class="form-control" placeholder="Especifique nacionalidad" value="<?php echo $actor[0]['nacionalidad'] ?>" required/>
 			</div>
 			<br>
-			<input type="submit" class="btn btn-success" value="Crear" name="BotonEditar">
+			<input type="submit" class="btn btn-success" value="Modificar" name="BotonEditar">
 		</form>
 	</div>
 </div>
