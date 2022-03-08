@@ -20,7 +20,7 @@
         <a class="nav-link" href="views/directores/lista.php">Directores</a>
 		<a class="nav-link" href="views/idiomas/lista.php">Idiomas</a>
 		<a class="nav-link" href="views/plataforma/lista.php">Plataformas</a>
-		<a class="nav-link" href="#">Series</a>
+		<a class="nav-link" href="views/serie/lista.php">Series</a>
       </div>
     </div>
   </div>

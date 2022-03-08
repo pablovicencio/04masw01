@@ -6,85 +6,77 @@
 	require_once("../../models/plataformaModels.php");
 
 	require_once("../../models/actorModels.php");
+
+	require_once '../../config/db.php';
 	
-	function cn(){
-		$localhost="localhost";
-		$usersdb="root";
-		$passworddb="123456789";
-		$namebd="04masw01";
-		
-		$conexion = @new mysqli($localhost, $usersdb, $passworddb, $namebd);//mysqli_connect
-		
-		if($conexion->connect_error){
-			die("Error: ".$conexion->connect_error);
-		}
-		
-		return $conexion;
+	function listarSerie(){
+
+		$pdo = AccesoDB::getCon();
+
+			$sql_list_serie = "SELECT a.id,a.titulo,
+			 b.nombre plataforma_nombre, concat(c.nombre,' ',c.apellidos) director_nombre
+			FROM series a inner join plataformas b on a.plataforma = b.id
+			inner join directores c on a.director = c.id";
+
+            $stmt = $pdo->prepare($sql_list_serie);
+            $stmt->execute();
+
+			$response = $stmt->fetchAll();
+            return $response;
 	}
 	
-	function listarSerie($conexion){
-		
-		$serieList = $conexion->query(query:"SELECT * FROM series");
-		
-		$serieArray = [];
-		foreach($serieList as $serieItem){
-			$serieObj = new Serie($serieItem["ID"],$serieItem["Titulo"],$serieItem["Plataforma"],$serieItem["Director"]);
-			array_push($serieArray,$serieObj);
-		}
-		$conexion->close();
-		
-		return $serieArray;
+	function listUno($id){
+
+		$pdo = AccesoDB::getCon();
+
+			$sql_sel_serie = "SELECT a.id,a.titulo,
+			 b.nombre plataforma_nombre, concat(c.nombre,' ',c.apellidos) director_nombre
+			FROM series a inner join plataformas b on a.plataforma = b.id
+			inner join directores c on a.director = c.id where a.id = :id";
+
+            $stmt = $pdo->prepare($sql_sel_serie);
+			$stmt->bindParam(":id", $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+			$response = $stmt->fetchAll();
+            return $response;
 	}
 	
-	function nuevaSerie($conexion, $titulo, $plataforma, $director){
-		
-		$serieNuevo = false;
-		
-		if($resultadoInsert = $conexion->query(query:"INSERT INTO series (Titulo, Plataforma, Director) VALUES('$titulo','$plataforma','$director')")){
-			$serieNuevo = true;
-		}
-		$conexion->close();
-		
-		return $serieNuevo;
-		
+	function listDirector(){
+
+		$pdo = AccesoDB::getCon();
+
+            $sql_list_dir = "SELECT * FROM directores";
+
+            $stmt = $pdo->prepare($sql_list_dir);
+            $stmt->execute();
+
+			$response = $stmt->fetchAll();
+            return $response;
 	}
 	
-	function listDirector($conexion){
-		$directorList = $conexion->query(query:"SELECT * FROM directores");
-		
-		$directorArray = [];
-		foreach($directorList as $directorItem){
-			$directorObj = new director($directorItem["ID"],$directorItem["Nombre"],$directorItem["Apellidos"],$directorItem["Fecha"],$directorItem["Nacionalidad"]);
-			array_push($directorArray,$directorObj);
-		}
-		$conexion->close();
-		
-		return $directorArray;
+	function listarPlataforma(){
+
+		$pdo = AccesoDB::getCon();
+
+            $sql_list_plataformas = "SELECT * FROM plataformas";
+
+            $stmt = $pdo->prepare($sql_list_plataformas);
+            $stmt->execute();
+
+			$response = $stmt->fetchAll();
+            return $response;
 	}
 	
-	function listarPlataforma($conexion){
-		$plataformaList = $conexion->query(query:"SELECT * FROM plataformas");
-		
-		$plataformaArray = [];
-		foreach($plataformaList as $plataformaItem){
-			$plataformaObj = new plataforma($plataformaItem["ID"],$plataformaItem["Nombre"]);
-			array_push($plataformaArray,$plataformaObj);
-		}
-		$conexion->close();
-		
-		return $plataformaArray;
-	}
-	
-	function listActor($conexion){
-		$actorList = $conexion->query(query:"SELECT * FROM actores");
-		
-		$actorArray = [];
-		foreach($actorList as $actorItem){
-			$actorObj = new actor($actorItem["ID"],$actorItem["Nombre"],$actorItem["Apellidos"],$actorItem["Fecha"],$actorItem["Nacionalidad"]);
-			array_push($actorArray,$actorObj);
-		}
-		$conexion->close();
-		
-		return $actorArray;
+	function listActor(){
+		$pdo = AccesoDB::getCon();
+
+            $sql_list_act = "SELECT * FROM actores WHERE Vigencia = 1";
+
+            $stmt = $pdo->prepare($sql_list_act);
+            $stmt->execute();
+
+			$response = $stmt->fetchAll();
+            return $response;
 	}
 ?>

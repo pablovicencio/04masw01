@@ -26,12 +26,12 @@
   </div>
 </nav>
 <?php
-	require_once("../../controllers/plataformaControllers.php");
+	require_once("../../controllers/serieControllers.php");
 	
 	if(isset($_GET['ID'])){
 		$ID = $_GET['ID'];
 		
-		$plataforma = listUno($ID);
+		$serie = listUno($ID);
 		
 ?>
 <div class="row">
